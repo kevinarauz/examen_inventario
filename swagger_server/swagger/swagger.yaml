@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: Inventory
+  description: Api for control of item
+  version: 1.0.1
+servers:
+- url: http://localhost:8080/rest/inventory-ms/v1.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /item:
+    post:
+      tags:
+      - Item
+      summary: Registro de item
+      description: Enpoint para el registro de item
+      operationId: save_item
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/item_body'
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        "400":
+          description: Vuelva a intentarlo mas tarde
+      x-openapi-router-controller: swagger_server.controllers.item_view.ItemView
+  /item/{itemId}:
+    get:
+      tags:
+      - Item
+      operationId: get_item_by_id
+      parameters:
+      - name: itemId
+        in: path
+        description: id del item
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          example: 1
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        "404":
+          description: El item no se encontró
+      x-openapi-router-controller: swagger_server.controllers.item_view.ItemView
+  /items/search:
+    get:
+      tags:
+      - Item
+      summary: Obtiene todas los item paginados
+      operationId: item_paginated
+      parameters:
+      - name: page
+        in: query
+        description: Número de página solciitada (comenzando en 1)
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: size
+        in: query
+        description: Tamaño
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      - name: name
+        in: query
+        description: Filtro
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.item_view.ItemView
+  /item/buy:
+    put:
+      tags:
+      - Item
+      summary: Comprar un producto
+      operationId: buy_product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemBuyRequest'
+      responses:
+        "200":
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.item_view.ItemView
+components:
+  schemas:
+    Item:
+      properties:
+        id:
+          type: integer
+          description: nombre del item
+          example: 1
+        name:
+          type: string
+          description: nombre del item
+          example: Cargador
+        description:
+          type: string
+          description: descripcion del item
+          example: Cargador para laptop
+        stock:
+          type: integer
+          description: cantidad del item
+          example: 10
+        price:
+          type: number
+          description: precio del item
+          example: 20.5
+      example:
+        price: 20.5
+        name: Cargador
+        description: Cargador para laptop
+        id: 1
+        stock: 10
+    item_body:
+      properties:
+        name:
+          type: string
+          description: nombre del item
+          example: Cargador
+        description:
+          type: string
+          description: descripcion del item
+          example: Cargador para laptop
+        stock:
+          type: integer
+          description: cantidad del item
+          example: 10
+        price:
+          type: number
+          description: precio del item
+          example: 20.5
+    ItemBuyRequest:
+      type: object
+      properties:
+        itemId:
+          type: integer
+          description: ID del producto a comprar
+          example: 1
+        cantidadProducto:
+          type: integer
+          description: Cantidad del producto a comprar
+          example: 1

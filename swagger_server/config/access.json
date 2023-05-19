@@ -1,0 +1,16 @@
+{
+    "DB": {
+        "POSTGRES" : {
+            "TASK": {
+                "HOST": "localhost",
+                "DB_NAME": "inventario",
+                "USER": "postgres",
+                "PASSWORD": "123456"
+            }
+        }
+    },
+    "EMAIL": {
+        "USER_EMAIL": "",
+        "USER_PASSWORD" : ""
+    }
+}
